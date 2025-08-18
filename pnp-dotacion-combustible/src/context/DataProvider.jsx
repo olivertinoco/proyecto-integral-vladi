@@ -8,7 +8,9 @@ export const DataProvider = ({ children }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const url = "/Home/TraerListaDotacionCombustible";
+        // const usuario = "52";
+        // const url = `/Home/TraerListaMenus?usuario=${encodeURIComponent(usuario)}`;
+        const url = "/Home/TraerListaMenus?usuario=52";
         const response = await fetch(url);
         const textData = await response.text();
 

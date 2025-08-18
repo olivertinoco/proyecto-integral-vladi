@@ -22,13 +22,13 @@ public class HomeController : Controller
         return View();
     }
 
-    public string TraerListaDotacionCombustible()
+    public string TraerListaMenus(string usuario)
     {
         try
         {
             string rpta = "";
             daSQL odaSQL = new daSQL(_configuration, "Cnx");
-            rpta = odaSQL.ejecutarComando("dbo.usp_listaDotacionCombustible");
+            rpta = odaSQL.ejecutarComando("dbo.usp_listarMenus22", "@data", usuario);
             return rpta;
         }
         catch (Exception ex)
