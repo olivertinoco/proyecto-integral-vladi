@@ -1,159 +1,139 @@
 import { useState, Fragment } from "react";
 import Box from "@mui/material/Box";
+import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Collapse from "@mui/material/Collapse";
-
 import {
-  InboxIcon,
   ChevronDownIcon,
   ChevronRightIcon,
-  Bars3Icon,
-  StarIcon,
-  PencilSquareIcon,
-  EnvelopeIcon,
-  TrashIcon,
-  ExclamationTriangleIcon,
   DocumentIcon,
 } from "@heroicons/react/24/outline";
+import { useData } from "../context/DataProvider";
 
-const Menu4 = () => {
+export default function Menu4() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [openSubItems, setOpenSubItems] = useState({});
+  const [openSubItem, setOpenSubItem] = useState(null);
 
-  const toggleSubItem = (item) => {
-    setOpenSubItems((prev) => ({
-      ...prev,
-      [item]: !prev[item],
-    }));
-  };
+  const toggleMenu = () => setMenuOpen(!menuOpen);
+  const toggleSubItem = (codigo) =>
+    setOpenSubItem((prev) => (prev === codigo ? null : codigo));
 
-  const list = (
-    <Box sx={{ width: 250 }} role="presentation">
-      <List className="bg-gray-900 text-white text-sm">
-        {/* Inbox */}
-        <ListItem disablePadding>
-          <ListItemButton onClick={() => setMenuOpen(false)}>
-            <ListItemIcon>
-              <InboxIcon className="h-5 w-5 text-gray-300" />
-            </ListItemIcon>
-            <ListItemText primary="Inbox" />
-          </ListItemButton>
-        </ListItem>
+  const { data } = useData();
 
-        {/* Subitems que colapsan */}
-        {["Important", "Work", "Personal"].map((text) => (
-          <Fragment key={text}>
-            <ListItem disablePadding>
-              <ListItemButton onClick={() => toggleSubItem(text)}>
-                <ListItemIcon>
-                  {openSubItems[text] ? (
-                    <ChevronDownIcon className="h-5 w-5 text-gray-300" />
-                  ) : (
-                    <ChevronRightIcon className="h-5 w-5 text-gray-300" />
-                  )}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
+  const parsedData = data.map((item) => {
+    const [codigo, nombre] = item.split("|");
+    return { codigo, nombre };
+  });
 
-            <Collapse in={openSubItems[text]} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding>
-                {["Sub A", "Sub B"].map((sub, i) => (
-                  <ListItem key={i} disablePadding sx={{ pl: 6 }}>
-                    <ListItemButton onClick={() => setMenuOpen(false)}>
-                      <ListItemIcon>
-                        <DocumentIcon className="h-5 w-5 text-gray-300" />
-                      </ListItemIcon>
-                      <ListItemText primary={`${text} - ${sub}`} />
-                    </ListItemButton>
-                  </ListItem>
-                ))}
-              </List>
-            </Collapse>
-          </Fragment>
-        ))}
-
-        {/* Items normales */}
-        <ListItem disablePadding>
-          <ListItemButton onClick={() => setMenuOpen(false)}>
-            <ListItemIcon>
-              <StarIcon className="h-5 w-5 text-gray-300" />
-            </ListItemIcon>
-            <ListItemText primary="Starred" />
-          </ListItemButton>
-        </ListItem>
-
-        <ListItem disablePadding>
-          <ListItemButton onClick={() => setMenuOpen(false)}>
-            <ListItemIcon>
-              <PencilSquareIcon className="h-5 w-5 text-gray-300" />
-            </ListItemIcon>
-            <ListItemText primary="Drafts" />
-          </ListItemButton>
-        </ListItem>
-      </List>
-
-      <Divider className="bg-gray-700" />
-
-      {/* Lista secundaria */}
-      <List className="bg-gray-900 text-white text-sm">
-        <ListItem disablePadding>
-          <ListItemButton onClick={() => setMenuOpen(false)}>
-            <ListItemIcon>
-              <EnvelopeIcon className="h-5 w-5 text-gray-300" />
-            </ListItemIcon>
-            <ListItemText primary="All mail" />
-          </ListItemButton>
-        </ListItem>
-
-        <ListItem disablePadding>
-          <ListItemButton onClick={() => setMenuOpen(false)}>
-            <ListItemIcon>
-              <TrashIcon className="h-5 w-5 text-gray-300" />
-            </ListItemIcon>
-            <ListItemText primary="Trash" />
-          </ListItemButton>
-        </ListItem>
-
-        <ListItem disablePadding>
-          <ListItemButton onClick={() => setMenuOpen(false)}>
-            <ListItemIcon>
-              <ExclamationTriangleIcon className="h-5 w-5 text-gray-300" />
-            </ListItemIcon>
-            <ListItemText primary="Spam" />
-          </ListItemButton>
-        </ListItem>
-      </List>
-    </Box>
+  const listaMenuItems = parsedData.filter((item) =>
+    item.codigo.endsWith("00"),
   );
+
+  const listaMenuSubItems = parsedData.filter(
+    (item) => !item.codigo.endsWith("00"),
+  );
+
+  const subItemsMap = listaMenuSubItems.reduce((acc, sub) => {
+    const parentPrefix = sub.codigo.slice(0, 2);
+    if (!acc[parentPrefix]) acc[parentPrefix] = [];
+    acc[parentPrefix].push(sub);
+    return acc;
+  }, {});
 
   return (
     <div>
-      {/* NAVBAR */}
-      <nav className="flex items-center justify-between bg-gray-800 text-white px-4 py-2">
+      <nav className="w-full bg-gray-800 text-white px-4 py-2 flex items-center">
         <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="flex items-center space-x-2"
+          onClick={toggleMenu}
+          className="p-2 rounded hover:bg-gray-700 transition"
         >
-          <Bars3Icon className="h-6 w-6" />
-          <span className="font-semibold">Menú</span>
+          MENU
         </button>
-        <span className="font-bold">Mi App</span>
       </nav>
 
-      {/* PANEL LATERAL BAJO EL NAV */}
-      <Collapse in={menuOpen} timeout="auto" unmountOnExit>
-        <div className="shadow-md flex">
-          <div className="w-[250px]">{list}</div>
-        </div>
-      </Collapse>
+      <SwipeableDrawer
+        anchor="left"
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        onOpen={toggleMenu}
+        sx={{
+          "& .MuiDrawer-paper": {
+            top: "48px",
+            backgroundColor: "#1f2937",
+            color: "white",
+            fontSize: "0.875rem",
+          },
+        }}
+      >
+        <Box
+          sx={{ width: 300 }}
+          role="presentation"
+          onKeyDown={() => setMenuOpen(false)}
+        >
+          <List>
+            {listaMenuItems.map((menu) => {
+              const prefix = menu.codigo.slice(0, 2);
+              const subItems = subItemsMap[prefix] || [];
+
+              return (
+                <Fragment key={menu.codigo}>
+                  <ListItem disablePadding>
+                    <ListItemButton
+                      onClick={() =>
+                        subItems.length > 0
+                          ? toggleSubItem(menu.codigo)
+                          : setMenuOpen(false)
+                      }
+                    >
+                      <ListItemIcon>
+                        {subItems.length > 0 ? (
+                          openSubItem === menu.codigo ? (
+                            <ChevronDownIcon className="h-5 w-5 text-gray-300" />
+                          ) : (
+                            <ChevronRightIcon className="h-5 w-5 text-gray-300" />
+                          )
+                        ) : (
+                          <DocumentIcon className="h-5 w-5 text-gray-400" />
+                        )}
+                      </ListItemIcon>
+                      <ListItemText primary={menu.nombre} />
+                    </ListItemButton>
+                  </ListItem>
+
+                  {subItems.length > 0 && (
+                    <Collapse
+                      in={openSubItem === menu.codigo}
+                      timeout="auto"
+                      unmountOnExit
+                    >
+                      <List component="div" disablePadding>
+                        {subItems.map((sub) => (
+                          <ListItem
+                            key={sub.codigo}
+                            disablePadding
+                            sx={{ pl: 6 }}
+                          >
+                            <ListItemButton onClick={() => setMenuOpen(false)}>
+                              <ListItemIcon>
+                                <DocumentIcon className="h-5 w-5 text-gray-400" />
+                              </ListItemIcon>
+                              <ListItemText primary={sub.nombre} />
+                            </ListItemButton>
+                          </ListItem>
+                        ))}
+                      </List>
+                    </Collapse>
+                  )}
+                </Fragment>
+              );
+            })}
+          </List>
+        </Box>
+      </SwipeableDrawer>
     </div>
   );
-};
-
-export default Menu4;
+}
