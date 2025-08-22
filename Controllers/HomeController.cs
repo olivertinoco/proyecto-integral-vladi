@@ -22,6 +22,7 @@ public class HomeController : Controller
         return View();
     }
 
+    [HttpGet("/Home/TraerListaMenus")]
     public string TraerListaMenus(string usuario)
     {
         try

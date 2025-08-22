@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PnpDotacionCombustible", "PnpDotacionCombustible.csproj", "{EC094316-C210-83AA-F4E4-E0FB25CBF191}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "proyecto-integral-vladi", "proyecto-integral-vladi.csproj", "{EC094316-C210-83AA-F4E4-E0FB25CBF191}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

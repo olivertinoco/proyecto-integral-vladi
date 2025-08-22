@@ -14,6 +14,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>PnpDotacionCombustible</RootNamespace>
+    <AssemblyName>PnpDotacionCombustible</AssemblyName>
   </PropertyGroup>
 
 </Project>
