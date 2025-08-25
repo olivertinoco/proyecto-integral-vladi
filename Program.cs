@@ -8,27 +8,33 @@ var builder = WebApplication.CreateBuilder(args);
 var archivoLog = builder.Configuration["AppSettings:ArchivoLog"] ?? "logs/log.txt";
 
 // Configurar Serilog
-Log.Logger = new LoggerConfiguration()
+var loggerConfig = new LoggerConfiguration()
     .MinimumLevel.Information()
-    .Enrich.FromLogContext()
-    .WriteTo.Console(
+    .Enrich.FromLogContext();
+
+if (builder.Environment.IsDevelopment())
+{
+    loggerConfig = loggerConfig.WriteTo.Console(
         outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}"
-    )
-    .WriteTo.File(
-        path: archivoLog,
-        restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error,
-        rollingInterval: RollingInterval.Day,
-        outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}",
-        retainedFileCountLimit: 7
-    )
-    .CreateLogger();
+    );
+}
+
+// Siempre escribir en archivo (solo errores)
+loggerConfig = loggerConfig.WriteTo.File(
+    path: archivoLog,
+    restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error,
+    rollingInterval: RollingInterval.Day,
+    outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}",
+    retainedFileCountLimit: 7
+);
+
+Log.Logger = loggerConfig.CreateLogger();
 
 // Usar Serilog como logger
 builder.Host.UseSerilog();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
 
 // Configure CORS for Vite development server
 if (builder.Environment.IsDevelopment())

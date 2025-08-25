@@ -24,7 +24,9 @@ export default function Menu4() {
 
   const { data } = useData();
 
-  const parsedData = data.map((item) => {
+  const [posId, ...newData] = data;
+
+  const parsedData = newData.map((item) => {
     const [codigo, nombre] = item.split("|");
     return { codigo, nombre };
   });
