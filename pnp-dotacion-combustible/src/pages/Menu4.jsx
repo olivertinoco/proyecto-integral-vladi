@@ -13,10 +13,13 @@ import {
   DocumentIcon,
 } from "@heroicons/react/24/outline";
 import { useData } from "../context/DataProvider";
+import { useNavigateTo } from "../utils/useNavigateTo";
+import { Outlet } from "react-router-dom";
 
 export default function Menu4() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openSubItem, setOpenSubItem] = useState(null);
+  const navigateTo = useNavigateTo();
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
   const toggleSubItem = (codigo) =>
@@ -45,6 +48,36 @@ export default function Menu4() {
     acc[parentPrefix].push(sub);
     return acc;
   }, {});
+
+  const handleSubItem = (codigoSubMenu, nombreSubMenu) => {
+    const datoEscalar = `${posId}|${nombreSubMenu}`;
+    let child = null;
+    switch (codigoSubMenu) {
+      case "1102":
+        child = "/menu/progActividad";
+        break;
+      case "0401":
+        child = "/menu/organigramas";
+        break;
+      case "0100":
+        child = "/menu/rqPersonal";
+        break;
+      case "0104":
+        child = "/menu/candidatos";
+        break;
+      case "0106":
+        child = "/menu/verificaPostulante";
+        break;
+      case "0108":
+        child = "/menu/datosPostulante";
+        break;
+      default:
+        alert("no tiene submenu asignado");
+        return;
+    }
+
+    navigateTo(child, { state: { value: datoEscalar } });
+  };
 
   return (
     <div>
@@ -123,7 +156,12 @@ export default function Menu4() {
                               <ListItemIcon>
                                 <DocumentIcon className="h-5 w-5 text-gray-400" />
                               </ListItemIcon>
-                              <ListItemText primary={sub.nombre} />
+                              <ListItemText
+                                primary={sub.nombre}
+                                onClick={() =>
+                                  handleSubItem(sub.codigo, sub.nombre)
+                                }
+                              />
                             </ListItemButton>
                           </ListItem>
                         ))}
@@ -136,6 +174,10 @@ export default function Menu4() {
           </List>
         </Box>
       </SwipeableDrawer>
+
+      <div className="p-4">
+        <Outlet />
+      </div>
     </div>
   );
 }

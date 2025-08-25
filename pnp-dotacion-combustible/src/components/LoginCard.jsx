@@ -1,19 +1,17 @@
 import { useState } from "react";
 import { useData } from "../context/DataProvider";
-import { navigateTo } from "../utils/navigation";
+import { useNavigateTo } from "../utils/useNavigateTo";
 
 const LoginCard = () => {
   const { login, error } = useData();
   const [usuario, setUsuario] = useState("");
   const [clave, setClave] = useState("");
+  const navigateTo = useNavigateTo();
 
   const handleLogin = async () => {
     const result = await login(usuario, clave);
     if (result.ok) {
-      console.log("Login correcto 🚀", result.data);
-      // aquí puedes navegar a otra página o mostrar menú
-      // INSTALAR REACT ROUTER
-      // navigateTo("/Home/Menu");
+      navigateTo("/menu");
     } else {
       console.log("Error:", result.error);
     }

@@ -92,4 +92,6 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}"
 );
 
+// app.MapFallbackToController("Index", "Home");
+
 app.Run();
