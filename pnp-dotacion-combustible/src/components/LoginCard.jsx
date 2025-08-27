@@ -40,7 +40,7 @@ const LoginCard = () => {
               value={usuario}
               onChange={(e) => setUsuario(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="DNI del postulante"
+              placeholder="ingrese su usuario"
             />
           </div>
           <div>
@@ -55,8 +55,13 @@ const LoginCard = () => {
               type="password"
               value={clave}
               onChange={(e) => setClave(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleLogin();
+                }
+              }}
               className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="••••••••"
+              placeholder="ingrese su clave"
             />
           </div>
 

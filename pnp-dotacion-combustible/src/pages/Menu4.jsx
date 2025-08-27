@@ -60,6 +60,10 @@ export default function Menu4() {
     navigateTo(child, { state: { value: posId } });
   };
 
+  const handleLogout = () => {
+    navigateTo("/");
+  };
+
   return (
     <div>
       <nav className="w-full bg-gray-800 text-white px-4 py-2 flex items-center">
@@ -71,8 +75,14 @@ export default function Menu4() {
         </button>
         <span className="mx-auto font-semibold">
           {selectedNames.menu}
-          {selectedNames.sub && ` > ${selectedNames.sub}`}
+          {selectedNames.sub && ` / ${selectedNames.sub}`}
         </span>
+        <button
+          onClick={handleLogout}
+          className="ml-auto px-3 py-1 rounded bg-red-600 hover:bg-red-700 transition"
+        >
+          Cerrar sesión
+        </button>
       </nav>
 
       <SwipeableDrawer

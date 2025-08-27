@@ -92,6 +92,6 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}"
 );
 
-// app.MapFallbackToController("Index", "Home");
+// app.MapFallbackToFile("/js/home/index.html");
 
 app.Run();
