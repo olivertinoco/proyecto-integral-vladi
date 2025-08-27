@@ -19,6 +19,11 @@ import { Outlet } from "react-router-dom";
 export default function Menu4() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openSubItem, setOpenSubItem] = useState(null);
+  const [selectedNames, setSelectedNames] = useState({
+    menu: "",
+    sub: "",
+  });
+
   const navigateTo = useNavigateTo();
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
@@ -49,34 +54,10 @@ export default function Menu4() {
     return acc;
   }, {});
 
-  const handleSubItem = (codigoSubMenu, nombreSubMenu) => {
-    const datoEscalar = `${posId}|${nombreSubMenu}`;
-    let child = null;
-    switch (codigoSubMenu) {
-      case "1102":
-        child = "/menu/progActividad";
-        break;
-      case "0401":
-        child = "/menu/organigramas";
-        break;
-      case "0100":
-        child = "/menu/rqPersonal";
-        break;
-      case "0104":
-        child = "/menu/candidatos";
-        break;
-      case "0106":
-        child = "/menu/verificaPostulante";
-        break;
-      case "0108":
-        child = "/menu/datosPostulante";
-        break;
-      default:
-        alert("no tiene submenu asignado");
-        return;
-    }
-
-    navigateTo(child, { state: { value: datoEscalar } });
+  const handleSubItem = (codigoSubMenu, nombreSubMenu, nombreMenu) => {
+    setSelectedNames({ menu: nombreMenu, sub: nombreSubMenu });
+    let child = `/menu/${codigoSubMenu}-repo`;
+    navigateTo(child, { state: { value: posId } });
   };
 
   return (
@@ -88,6 +69,10 @@ export default function Menu4() {
         >
           MENU
         </button>
+        <span className="mx-auto font-semibold">
+          {selectedNames.menu}
+          {selectedNames.sub && ` > ${selectedNames.sub}`}
+        </span>
       </nav>
 
       <SwipeableDrawer
@@ -159,7 +144,11 @@ export default function Menu4() {
                               <ListItemText
                                 primary={sub.nombre}
                                 onClick={() =>
-                                  handleSubItem(sub.codigo, sub.nombre)
+                                  handleSubItem(
+                                    sub.codigo,
+                                    sub.nombre,
+                                    menu.nombre,
+                                  )
                                 }
                               />
                             </ListItemButton>
